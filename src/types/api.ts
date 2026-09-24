@@ -141,21 +141,21 @@ type AnyObj = any;
 const isObj = (v: unknown): boolean => !!v && typeof v === "object" && !Array.isArray(v);
 
 /** Unwraps `{ success, data }` / `{ statusCode, data }` envelopes. */
-export function unwrap<T>(raw: unknown): T {
+export function unwrap<T>(raw: AnyObj): T {
   if (isObj(raw) && "data" in raw && ("success" in raw || "statusCode" in raw || "message" in raw)) {
     return raw.data as T;
   }
   return raw as T;
 }
 
-export function toPage<T>(raw: unknown, fallback: { page: number; limit: number }): Page<T> {
-  const r = unwrap<unknown>(raw);
+export function toPage<T>(raw: AnyObj, fallback: { page: number; limit: number }): Page<T> {
+  const r = unwrap<AnyObj>(raw);
   if (Array.isArray(r)) {
     return { items: r as T[], total: r.length, page: fallback.page, limit: fallback.limit, totalPages: 1 };
   }
   if (isObj(r)) {
     const items = (r.items ?? r.data ?? r.results ?? r.rows ?? []) as T[];
-    const meta = (isObj(r.meta) ? r.meta : isObj(r.pagination) ? r.pagination : r) as AnyObj;
+    const meta: AnyObj = isObj(r.meta) ? r.meta : isObj(r.pagination) ? r.pagination : r;
     const total = Number(meta.total ?? meta.totalItems ?? meta.count ?? items.length);
     const limit = Number(meta.limit ?? meta.pageSize ?? meta.perPage ?? fallback.limit);
     const page = Number(meta.page ?? meta.currentPage ?? fallback.page);
