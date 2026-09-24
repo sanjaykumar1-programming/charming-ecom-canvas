@@ -4,7 +4,7 @@ const KEY = "ordermesh.session";
 
 export interface StoredSession {
   accessToken: string;
-  refreshToken?: string;
+  refreshToken?: string | undefined;
   user: User | null;
 }
 

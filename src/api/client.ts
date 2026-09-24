@@ -23,7 +23,8 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!session?.refreshToken) return null;
   try {
     const res = await axios.post(`${API_URL}/auth/refresh`, { refreshToken: session.refreshToken });
-    const body = (res.data?.data ?? res.data) as Record<string, unknown>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body: any = res.data?.data ?? res.data;
     const tokens = (body.tokens ?? body) as { accessToken?: string; refreshToken?: string };
     if (!tokens.accessToken) return null;
     hooks.onTokens(tokens.accessToken, tokens.refreshToken ?? session.refreshToken);

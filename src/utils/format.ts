@@ -7,7 +7,7 @@ export const formatMoney = (cents: number | undefined | null) => inr.format(Math
 export function toCents(input: string): number | null {
   const m = input.trim().match(/^(\d+)(?:\.(\d{0,2}))?$/);
   if (!m) return null;
-  return parseInt(m[1], 10) * 100 + parseInt((m[2] ?? "").padEnd(2, "0") || "0", 10);
+  return parseInt(m[1] ?? "0", 10) * 100 + parseInt((m[2] ?? "").padEnd(2, "0") || "0", 10);
 }
 
 export const formatDate = (iso?: string) =>

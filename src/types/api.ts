@@ -24,7 +24,7 @@ export interface User {
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken?: string;
+  refreshToken?: string | undefined;
 }
 
 export interface Category {
@@ -136,8 +136,9 @@ export interface Page<T> {
 
 /* ---------- Response normalizers (tolerant of common NestJS shapes) ---------- */
 
-type AnyObj = Record<string, unknown>;
-const isObj = (v: unknown): v is AnyObj => !!v && typeof v === "object" && !Array.isArray(v);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyObj = any;
+const isObj = (v: unknown): boolean => !!v && typeof v === "object" && !Array.isArray(v);
 
 /** Unwraps `{ success, data }` / `{ statusCode, data }` envelopes. */
 export function unwrap<T>(raw: unknown): T {

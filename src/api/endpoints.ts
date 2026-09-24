@@ -16,7 +16,8 @@ export interface RegisterPayload { firstName: string; lastName: string; email: s
 export interface LoginResult { tokens: AuthTokens | null; user: User | null }
 
 function readAuth(raw: unknown): LoginResult {
-  const b = (unwrap<Record<string, unknown>>(raw) ?? {}) as Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const b: any = unwrap<unknown>(raw) ?? {};
   const t = (b.tokens ?? b) as Partial<AuthTokens>;
   return {
     tokens: t.accessToken ? { accessToken: t.accessToken, refreshToken: t.refreshToken } : null,
@@ -68,7 +69,8 @@ export interface CheckoutResult { order: Order | null; payment: Record<string, u
 export const ordersApi = {
   checkout: (p: CheckoutPayload): Promise<CheckoutResult> =>
     api.post("/orders/checkout", p).then((r) => {
-      const b = unwrap<Record<string, unknown>>(r.data) ?? {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const b: any = unwrap<unknown>(r.data) ?? {};
       const order = ((b.order ?? (b.id ? b : null)) as Order) ?? null;
       const payment = (b.payment ?? b.paymentIntent ?? order?.payment ?? null) as Record<string, unknown> | null;
       return { order, payment, raw: b };
