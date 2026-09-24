@@ -38,7 +38,7 @@ export const usersApi = {
 };
 
 /* ---------------- catalog ---------------- */
-export interface ProductQuery { page?: number; limit?: number; search?: string; categoryId?: string }
+export interface ProductQuery { page?: number | undefined; limit?: number | undefined; search?: string | undefined; categoryId?: string | undefined }
 export const productsApi = {
   list: (q: ProductQuery): Promise<Page<Product>> => {
     const params = Object.fromEntries(Object.entries(q).filter(([, v]) => v !== undefined && v !== ""));
